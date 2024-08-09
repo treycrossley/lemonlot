@@ -1,17 +1,18 @@
 package com.revature.thelemonlot.model;
 
 import java.time.LocalDate;
+import java.util.Date;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Data
-@Table(name = "Transaction")
+@Table(name = "transactions")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,28 +28,28 @@ public class Transaction {
     @Column(name = "car_id", nullable = false)
     private int car_id;
 
-    @Column(name = "date", nullable = false)
-    private LocalDate date;
+    @Column(name = "transaction_date", nullable = false)
+    private Date date;
 
-    @Column(name = "amount", nullable = false)
-    private double amount;
+    @Column(name = "amount", columnDefinition = "numeric(10,2)", nullable = false)
+    private float amount;
 
-    @Column(name = "status",  nullable = false)
+    @Column(name = "status", nullable = false)
     private String status;
 
     @Column(name = "payment_method", nullable = false)
     private String payment_method;
 
-    @Column(name = "offer_amount")
-    private double offer_amount;
+    @Column(name = "offer_amount", columnDefinition = "numeric(10,2)")
+    private float offer_amount;
 
     @Column(name = "comments", nullable = false)
     private String comments;
 
-    @Column(name = "create_at", nullable = false)
-    private LocalDate create_at;
+    @Column(name = "created_at", nullable = false)
+    private Date create_at;
 
     @Column(name = "updated_at", nullable = false)
-    private LocalDate updated_at;
+    private Date updated_at;
 
 }

@@ -1,6 +1,7 @@
 package com.revature.thelemonlot.model;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Inventory")
+@Table(name = "inventory")
 public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,14 +33,14 @@ public class Inventory {
     @Column(name = "year", nullable = false)
     private int year;
 
-    @Column(name = "price", nullable = false)
-    private double price;
+    @Column(name = "price", columnDefinition = "numeric(10,2)", nullable = false)
+    private float price;
 
     @Column(name = "color")
     private String color;
 
-    @Column(name = "mileage")
-    private int mileage;
+    @Column(name = "mileage", columnDefinition = "numeric(10,2)")
+    private float mileage;
 
     @Column(name = "status", nullable = false)
     private String status;
@@ -54,8 +55,8 @@ public class Inventory {
     private String imageUrl;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 }

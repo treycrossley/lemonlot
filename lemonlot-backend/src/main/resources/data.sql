@@ -35,7 +35,7 @@ create table inventory (
     year integer not null check (year >= 1886),
     price decimal(10, 2) not null,
     color varchar(30),
-    mileage decimal (10, 2),
+    mileage decimal(10, 2),
     status varchar(20) check (status in ('Available', 'Sold', 'Reserved')),
     inventory_count integer not null check (inventory_count >= 0),
     description text,
@@ -45,6 +45,7 @@ create table inventory (
 );
 
 create table transactions (
+	transaction_id serial primary key,
     user_id integer references users(user_id) on delete set null,
 	constraint user_fk
         foreign key(user_id)
