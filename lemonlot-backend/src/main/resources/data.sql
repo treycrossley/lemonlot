@@ -68,9 +68,9 @@ $$;
 --     updated_at timestamp default current_timestamp
 -- );
 
-create trigger update_timestamp before update on transactions for each row execute procedure update_timestamp();
-create trigger update_timestamp before update on inventory for each row execute procedure update_timestamp();
-create trigger update_timestamp before update on users for each row execute procedure update_timestamp();
+--create trigger update_timestamp before update on transactions for each row execute procedure update_timestamp();
+--create trigger update_timestamp before update on cars for each row execute procedure update_timestamp();
+--create trigger update_timestamp before update on users for each row execute procedure update_timestamp();
 
 insert into inventory (make, model, year, price, color, mileage, status, inventory_count, description, image_url) values
     ('Toyota', 'Corolla', 2020, 20000.00, 'Blue', 15000.00, 'Available', 10, 'A reliable and fuel-efficient compact car.', 'http://example.com/images/toyota_corolla_2020.jpg'),
