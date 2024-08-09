@@ -12,6 +12,8 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Data
 @Entity
@@ -54,9 +56,11 @@ public class Car {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDate createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 }

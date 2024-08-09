@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -46,10 +48,12 @@ public class Transaction {
     @Column(name = "comments", nullable = false)
     private String comments;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDate create_at;
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private LocalDate createdAt;
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDate updated_at;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDate updatedAt;
 
 }

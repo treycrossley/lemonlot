@@ -2,6 +2,8 @@ package com.revature.thelemonlot.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,9 +46,11 @@ public class User {
     @Column(name = "preferences")
     private String preferences;
 
-    @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDate createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 }
