@@ -29,9 +29,9 @@ public class Transaction {
     private int car_id;
 
     @Column(name = "transaction_date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
-    @Column(name = "amount", columnDefinition = "numeric(10,2)", nullable = false)
+    @Column(name = "amount", nullable = false)
     private float amount;
 
     @Column(name = "status", nullable = false)
@@ -40,16 +40,16 @@ public class Transaction {
     @Column(name = "payment_method", nullable = false)
     private String payment_method;
 
-    @Column(name = "offer_amount", columnDefinition = "numeric(10,2)")
+    @Column(name = "offer_amount")
     private float offer_amount;
 
     @Column(name = "comments", nullable = false)
     private String comments;
 
     @Column(name = "created_at", nullable = false)
-    private Date create_at;
+    private LocalDate create_at;
 
     @Column(name = "updated_at", nullable = false)
-    private Date updated_at;
+    private LocalDate updated_at;
 
 }

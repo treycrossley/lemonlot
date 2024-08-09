@@ -1,5 +1,6 @@
 package com.revature.thelemonlot.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -32,13 +33,13 @@ public class Car {
     @Column(name = "year", nullable = false)
     private int year;
 
-    @Column(name = "price", columnDefinition = "numeric(10,2)", nullable = false)
+    @Column(name = "price", nullable = false)
     private float price;
 
     @Column(name = "color")
     private String color;
 
-    @Column(name = "mileage", columnDefinition = "numeric(10,2)")
+    @Column(name = "mileage")
     private float mileage;
 
     @Column(name = "status", nullable = false)
@@ -54,8 +55,8 @@ public class Car {
     private String imageUrl;
 
     @Column(name = "created_at", nullable = false)
-    private Date createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private LocalDate updatedAt;
 }
