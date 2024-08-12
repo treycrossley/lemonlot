@@ -14,20 +14,22 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id", updatable = false)
-    private int transaction_id;
+    private int transactionId;
 
     @Column(name = "user_id", nullable = false)
-    private int user_id;
+    private int userId;
 
     @Column(name = "salesperson_id")
-    private int salesperson_id;
+    private int salespersonId;
 
     @Column(name = "car_id", nullable = false)
-    private int car_id;
+    private int carId;
 
+    // the the date of finalized transactions
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
+    // final price of the car
     @Column(name = "amount", nullable = false)
     private double amount;
 
@@ -35,18 +37,19 @@ public class Transaction {
     private String status;
 
     @Column(name = "payment_method", nullable = false)
-    private String payment_method;
+    private String paymentMethod;
 
     @Column(name = "offer_amount")
-    private double offer_amount;
+    private double offerAmount;
 
     @Column(name = "comments", nullable = false)
     private String comments;
 
+
     @Column(name = "create_at", nullable = false)
-    private LocalDate create_at;
+    private LocalDate createAt;
 
     @Column(name = "updated_at", nullable = false)
-    private LocalDate updated_at;
+    private LocalDate updatedAt;
 
 }
