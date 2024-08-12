@@ -1,15 +1,18 @@
 package com.revature.thelemonlot.model;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Data
-@Table(name = "Transaction")
+@Table(name = "transactions")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,28 +28,30 @@ public class Transaction {
     @Column(name = "car_id", nullable = false)
     private int car_id;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "transaction_date", nullable = false)
     private LocalDate date;
 
     @Column(name = "amount", nullable = false)
-    private double amount;
+    private float amount;
 
-    @Column(name = "status",  nullable = false)
+    @Column(name = "status", nullable = false)
     private String status;
 
     @Column(name = "payment_method", nullable = false)
     private String payment_method;
 
     @Column(name = "offer_amount")
-    private double offer_amount;
+    private float offer_amount;
 
     @Column(name = "comments", nullable = false)
     private String comments;
 
-    @Column(name = "create_at", nullable = false)
-    private LocalDate create_at;
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private LocalDate createdAt;
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDate updated_at;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDate updatedAt;
 
 }
