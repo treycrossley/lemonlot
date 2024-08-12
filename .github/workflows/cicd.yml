@@ -9,8 +9,7 @@ jobs:
   backend-tests:
     name: Run Backend Tests
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.changed_files, 'lemonlot-backend/**')
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -28,7 +27,6 @@ jobs:
   frontend-tests:
     name: Run Frontend Tests
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.changed_files, 'lemonlot-frontend/**')
 
     steps:
       - name: Checkout code
