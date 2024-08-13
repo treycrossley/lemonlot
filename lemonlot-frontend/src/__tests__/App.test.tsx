@@ -1,17 +1,44 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import App from "../App"; // Adjust the import path as necessary
+// src/App.test.tsx
 
-describe("App Component", () => {
-  test("renders the heading", () => {
-    render(<App />);
-    const headingElement = screen.getByText(/vite \+ react/i);
-    expect(headingElement).toBeInTheDocument();
+import { render, screen } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
+import { describe, it, expect, vi } from "vitest";
+import App from "../App";
+
+// Mock the Home and NotFound components
+vi.mock("../components/Home", () => ({
+  __esModule: true,
+  default: () => <div>Home Component</div>,
+}));
+
+vi.mock("../components/NotFound404", () => ({
+  __esModule: true,
+  default: () => <div>404 Not Found</div>,
+}));
+
+describe("App Routing", () => {
+  it("renders the Home component when the path is '/'", () => {
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    );
+
+    // Assert that the Home component is rendered
+    expect(screen.getByText("Home Component")).toBeInTheDocument();
   });
 
-  test("button click updates count", () => {
-    render(<App />);
-    const buttonElement = screen.getByRole("button", { name: /count is 0/i });
-    fireEvent.click(buttonElement);
-    expect(buttonElement).toHaveTextContent("count is 1");
+  it("renders the NotFound component for an unknown path", () => {
+    // Mock the initial URL to simulate navigation to an unknown route
+    window.history.pushState({}, "Test page", "/unknown-route");
+
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    );
+
+    // Assert that the NotFound component is rendered
+    expect(screen.getByText("404 Not Found")).toBeInTheDocument();
   });
 });
