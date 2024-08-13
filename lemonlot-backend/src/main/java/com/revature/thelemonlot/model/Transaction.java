@@ -1,55 +1,57 @@
 package com.revature.thelemonlot.model;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Data
-@Table(name = "Transaction")
+@Table(name = "transactions")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id", updatable = false)
-    private int transactionId;
+    private int transaction_id;
 
     @Column(name = "user_id", nullable = false)
-    private int userId;
+    private int user_id;
 
     @Column(name = "salesperson_id")
-    private int salespersonId;
+    private int salesperson_id;
 
     @Column(name = "car_id", nullable = false)
-    private int carId;
+    private int car_id;
 
-    // the the date of finalized transactions
-    @Column(name = "date", nullable = false)
+    @Column(name = "transaction_date", nullable = false)
     private LocalDate date;
 
-    // final price of the car
     @Column(name = "amount", nullable = false)
-    private double amount;
+    private float amount;
 
-    @Column(name = "status",  nullable = false)
+    @Column(name = "status", nullable = false)
     private String status;
 
     @Column(name = "payment_method", nullable = false)
-    private String paymentMethod;
+    private String payment_method;
 
     @Column(name = "offer_amount")
-    private double offerAmount;
+    private float offer_amount;
 
     @Column(name = "comments", nullable = false)
     private String comments;
 
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private LocalDate createdAt;
 
-    @Column(name = "create_at", nullable = false)
-    private LocalDate createAt;
-
-    @Column(name = "updated_at", nullable = false)
+    @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDate updatedAt;
 
 }
