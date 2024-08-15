@@ -1,5 +1,4 @@
 package com.revature.thelemonlot.controller;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,26 +8,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.thelemonlot.model.Car;
-import com.revature.thelemonlot.service.CarService;
+import com.revature.thelemonlot.model.User;
+import com.revature.thelemonlot.service.UserService;
 
 @RestController
-@RequestMapping("/api/Cars")
-public class CarController {
+@RequestMapping("/api/Users")
+public class UserController {
 
     @Autowired
-    private CarService carService;
+    private UserService userService;
 
-    // Get all Cars
+    // Get all Users
     @GetMapping
-    public List<Car> getAllCars() {
-        return carService.getAllCars();
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
-    // Get a Car by ID
+    // Get a User by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Car> getCarById(@PathVariable int id) {
-        return carService.getCarById(id)
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
+        return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
