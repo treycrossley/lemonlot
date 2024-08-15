@@ -14,7 +14,7 @@ public class CarService {
     @Autowired
     private CarRepository carRepository;
 
-    public List<Car> getAllCars() { 
+    public List<Car> getAllCars() {
         return carRepository.findAll();
     }
 
