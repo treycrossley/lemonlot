@@ -8,7 +8,7 @@ function Home() {
 
   return (
     <>
-      <div>
+      <div className="flex justify-between space-x-4 px-12">
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
