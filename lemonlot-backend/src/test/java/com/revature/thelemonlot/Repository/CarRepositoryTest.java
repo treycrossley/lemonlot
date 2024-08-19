@@ -1,4 +1,4 @@
-package com.revature.thelemonlot.Repository;
+package com.revature.thelemonlot.repository;
 
 import java.util.List;
 
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.revature.thelemonlot.model.Car;
-import com.revature.thelemonlot.repository.CarRepository;
 
 @DataJpaTest
 public class CarRepositoryTest {

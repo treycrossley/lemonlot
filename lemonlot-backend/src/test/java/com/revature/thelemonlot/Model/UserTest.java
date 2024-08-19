@@ -1,11 +1,9 @@
-package com.revature.thelemonlot.Model;
+package com.revature.thelemonlot.model;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
-
-import com.revature.thelemonlot.model.User;
 
 public class UserTest {
 
