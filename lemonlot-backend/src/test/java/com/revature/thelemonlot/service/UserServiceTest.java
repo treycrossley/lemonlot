@@ -80,11 +80,9 @@ public class UserServiceTest {
         User savedUser = userService.save(user);
         assertNotNull(savedUser);
         assertEquals("newuser", savedUser.getUsername());
-
         // Assuming the password should be encoded, assert that the encoded password was
         // set
         assertEquals(encodedPassword, savedUser.getPassword());
-
     }
 
     @Test

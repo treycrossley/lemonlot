@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
 
 interface FormFieldProps<T extends FieldValues> {
   label: string;
@@ -78,8 +79,30 @@ export default function RegistrationForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      // First, register the user
+      console.log("Form values:", values);
+      const API_URL = import.meta.env.VITE_API_URL;
+      console.log("API URL:", API_URL);
+      const registerResponse = await axios.post(
+        `${API_URL}/users/register`,
+        values
+      );
+      console.log("Registration successful!", registerResponse.data);
+
+      const loginResponse = await axios.post(`${API_URL}/users/login`, {
+        username: values.username,
+        password: values.password,
+      });
+
+      console.log("Login successful!", loginResponse.data);
+      localStorage.setItem("token", loginResponse.data.accessToken);
+      const storedToken = localStorage.getItem("token");
+      console.log("Stored Token:", storedToken);
+    } catch (error) {
+      console.error("An error occurred during registration or login.", error);
+    }
   }
 
   return (
