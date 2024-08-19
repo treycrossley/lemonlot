@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.revature.thelemonlot.model.User;
 import com.revature.thelemonlot.repository.UserRepository;
@@ -28,8 +29,11 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
+    @Mock
+    private BCryptPasswordEncoder passwordEncoder;
+
     @BeforeEach
-    void setUp() {
+    protected void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
@@ -66,12 +70,21 @@ public class UserServiceTest {
         user.setUsername("newuser");
         user.setPassword("password");
 
+        // Mock behavior for encoding password
+        String encodedPassword = "encodedpassword";
+        when(passwordEncoder.encode("password")).thenReturn(encodedPassword);
+
         when(userRepository.findByUsername("newuser")).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         User savedUser = userService.save(user);
         assertNotNull(savedUser);
         assertEquals("newuser", savedUser.getUsername());
+
+        // Assuming the password should be encoded, assert that the encoded password was
+        // set
+        assertEquals(encodedPassword, savedUser.getPassword());
+
     }
 
     @Test

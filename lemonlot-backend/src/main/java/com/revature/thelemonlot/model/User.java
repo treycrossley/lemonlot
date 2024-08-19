@@ -65,7 +65,7 @@ public class User implements UserDetails {
 
     @NotBlank(message = "Phone number cannot be blank")
     @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Must be a valid international phone number (e.g., +1234567890 or 987654321).")
-    @Column(name = "phoneNumber", nullable = false)
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
     @Column(name = "address")
@@ -88,4 +88,27 @@ public class User implements UserDetails {
         return Set.of(() -> role); // Wrap role in a GrantedAuthority
     }
 
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return true; // Customize if you need expiration logic
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return true; // Customize if you need locking logic
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return true; // Customize if you need expiration logic
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return true; // Customize if you need enabled/disabled logic
+    }
 }
