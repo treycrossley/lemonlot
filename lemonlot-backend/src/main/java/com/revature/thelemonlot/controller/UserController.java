@@ -23,8 +23,6 @@ import com.revature.thelemonlot.util.JwtUtil;
 
 import jakarta.validation.Valid;
 
-import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
