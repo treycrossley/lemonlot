@@ -6,12 +6,14 @@ import RegistrationPage from "@/pages/RegistrationPage";
 import LoginPage from "@/pages/LoginPage";
 import UserProfile from "@/pages/UserProfile";
 import { Toaster } from "@/components/ui/toaster";
+import Navbar from "@/components/Navbar";
 
 function App() {
   return (
     <>
       <div>
         <Toaster />
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<RegistrationPage />} />
