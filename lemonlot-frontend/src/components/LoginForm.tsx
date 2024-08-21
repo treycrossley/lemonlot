@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useToast } from "./ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { LoadingSpinner } from "./ui/LoadingSpinner";
+import { useLocalStorage } from "usehooks-ts";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -19,6 +20,7 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [, setToken] = useLocalStorage("auth_token", "");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,7 +44,7 @@ export default function LoginForm() {
   }
 
   function handleSuccess(loginResponse: AxiosResponse<LoginResponse>) {
-    localStorage.setItem("token", loginResponse.data.accessToken);
+    setToken(JSON.stringify(loginResponse.data));
     navigate("/user-profile");
     toast({
       title: "Login Successful",

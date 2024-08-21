@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useToast } from "./ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { LoadingSpinner } from "./ui/LoadingSpinner";
+import { useLocalStorage } from "usehooks-ts";
 
 const formSchema = z
   .object({
@@ -30,6 +31,7 @@ const formSchema = z
 
 export default function RegistrationForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [, setToken] = useLocalStorage("auth_token", "");
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -76,7 +78,7 @@ export default function RegistrationForm() {
   }
 
   function handleSuccess(loginResponse: AxiosResponse<LoginResponse>) {
-    localStorage.setItem("token", loginResponse.data.accessToken);
+    setToken(JSON.stringify(loginResponse.data));
     navigate("/user-profile");
     toast({
       title: "Registration Successful",
