@@ -1,51 +1,14 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Control, FieldPath, FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import axios from "axios";
-
-interface FormFieldProps<T extends FieldValues> {
-  label: string;
-  name: FieldPath<T>;
-  control: Control<T>;
-  placeholder?: string;
-  type?: string;
-}
-
-export function FormFieldItem<T extends FieldValues>({
-  label,
-  name,
-  control,
-  placeholder,
-  type = "text",
-}: FormFieldProps<T>) {
-  return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className="flex flex-col items-start">
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <Input type={type} placeholder={placeholder} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-}
+import { Form } from "@/components/ui/form";
+import axios, { AxiosResponse } from "axios";
+import { FormFieldItem } from "./FormFieldItem";
+import { useState } from "react";
+import { useToast } from "./ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import { LoadingSpinner } from "./ui/LoadingSpinner";
 
 const formSchema = z
   .object({
@@ -66,6 +29,10 @@ const formSchema = z
   });
 
 export default function RegistrationForm() {
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -79,97 +46,148 @@ export default function RegistrationForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      // First, register the user
-      console.log("Form values:", values);
-      const API_URL = import.meta.env.VITE_API_URL;
-      console.log("API URL:", API_URL);
-      const registerResponse = await axios.post(
-        `${API_URL}/users/register`,
-        values
+  interface LoginResponse {
+    accessToken: string; // The JWT token or similar authentication token
+    tokenType: string; // The type of token, e.g., "Bearer"
+  }
+
+  interface RegisterResponse {
+    id: number;
+    username: string;
+    password: string; // Be cautious with storing or displaying sensitive data like passwords
+    email: string;
+    role: string; // Adjust type if you have a specific set of roles
+    // Add other fields if necessary
+  }
+
+  async function registerUser(
+    values: z.infer<typeof formSchema>
+  ): Promise<AxiosResponse<RegisterResponse>> {
+    const API_URL = import.meta.env.VITE_API_URL;
+    return axios.post(`${API_URL}/users/register`, values);
+  }
+
+  async function loginUser(
+    username: string,
+    password: string
+  ): Promise<AxiosResponse<LoginResponse>> {
+    const API_URL = import.meta.env.VITE_API_URL;
+    return axios.post(`${API_URL}/users/login`, { username, password });
+  }
+
+  function handleSuccess(loginResponse: AxiosResponse<LoginResponse>) {
+    localStorage.setItem("token", loginResponse.data.accessToken);
+    navigate("/user-profile");
+    toast({
+      title: "Registration Successful",
+      description: "You have been successfully registered and logged in.",
+    });
+  }
+
+  function handleError(error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "An error occurred during registration or login.",
+        error.response?.data
       );
+    } else {
+      console.error("An unexpected error occurred.", error);
+    }
+
+    toast({
+      title: "Registration Failed",
+      description:
+        "An error occurred during registration or login. Please try again.",
+      variant: "destructive",
+    });
+  }
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    try {
+      console.log("Form values:", values);
+      const registerResponse = await registerUser(values);
       console.log("Registration successful!", registerResponse.data);
 
-      const loginResponse = await axios.post(`${API_URL}/users/login`, {
-        username: values.username,
-        password: values.password,
-      });
-
+      const loginResponse = await loginUser(values.username, values.password);
       console.log("Login successful!", loginResponse.data);
-      localStorage.setItem("token", loginResponse.data.accessToken);
-      const storedToken = localStorage.getItem("token");
-      console.log("Stored Token:", storedToken);
+
+      handleSuccess(loginResponse);
     } catch (error) {
-      console.error("An error occurred during registration or login.", error);
+      handleError(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
-    <>
-      <h1 className="mb-8 text-2xl font-bold">User Registration</h1>
-      <Form {...form}>
-        <form
-          noValidate
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 border rounded-lg p-6"
-        >
-          <FormFieldItem
-            control={form.control}
-            name="username"
-            label="Username"
-            placeholder="username"
-          />
+    <Form {...form}>
+      <form
+        noValidate
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 border rounded-lg p-6"
+      >
+        <FormFieldItem
+          control={form.control}
+          name="username"
+          label="Username"
+          placeholder="username"
+        />
 
-          <FormFieldItem
-            control={form.control}
-            name="email"
-            label="Email"
-            placeholder="Email"
-            type="email"
-          />
+        <FormFieldItem
+          control={form.control}
+          name="email"
+          label="Email"
+          placeholder="Email"
+          type="email"
+        />
 
-          <FormFieldItem
-            control={form.control}
-            name="firstName"
-            label="First Name"
-            placeholder="First Name"
-          />
+        <FormFieldItem
+          control={form.control}
+          name="firstName"
+          label="First Name"
+          placeholder="First Name"
+        />
 
-          <FormFieldItem
-            control={form.control}
-            name="lastName"
-            label="Last Name"
-            placeholder="Last Name"
-          />
+        <FormFieldItem
+          control={form.control}
+          name="lastName"
+          label="Last Name"
+          placeholder="Last Name"
+        />
 
-          <FormFieldItem
-            control={form.control}
-            name="phoneNumber"
-            label="Phone Number"
-            placeholder="Phone Number"
-            type="tel"
-          />
+        <FormFieldItem
+          control={form.control}
+          name="phoneNumber"
+          label="Phone Number"
+          placeholder="Phone Number"
+          type="tel"
+        />
 
-          <FormFieldItem
-            control={form.control}
-            name="password"
-            label="Password"
-            placeholder="Password"
-            type="password"
-          />
+        <FormFieldItem
+          control={form.control}
+          name="password"
+          label="Password"
+          placeholder="Password"
+          type="password"
+        />
 
-          <FormFieldItem
-            control={form.control}
-            name="confirmPassword"
-            label="Confirm Password"
-            placeholder="Confirm Password"
-            type="password"
-          />
+        <FormFieldItem
+          control={form.control}
+          name="confirmPassword"
+          label="Confirm Password"
+          placeholder="Confirm Password"
+          type="password"
+        />
 
-          <Button type="submit">Register</Button>
-        </form>
-      </Form>
-    </>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? (
+            <LoadingSpinner className="w-5 h-5 text-blue-500" /> // Custom size and color
+          ) : (
+            "Register"
+          )}
+        </Button>
+      </form>
+    </Form>
   );
 }
