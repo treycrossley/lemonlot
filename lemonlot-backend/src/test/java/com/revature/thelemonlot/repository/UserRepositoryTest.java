@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.revature.thelemonlot.model.User;
+import com.revature.thelemonlot.repository.UserRepository;
 
 @DataJpaTest
 @SpringJUnitConfig

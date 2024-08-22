@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/Navbar";
 import EditUserPage from "@/pages/EditUserPage";
 import AdminPortal from "./pages/AdminPortal";
+import TransactionsComponent from "./pages/Transaction";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/edit-user/:userId" element={<EditUserPage />} />
           <Route path="/admin-portal" element={<AdminPortal />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/Transaction" element = {<TransactionsComponent/>}/>
         </Routes>
       </div>
     </>
