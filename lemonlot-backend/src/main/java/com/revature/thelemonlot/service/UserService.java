@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.revature.thelemonlot.dto.UpdateUserRequest;
 import com.revature.thelemonlot.model.User;
 import com.revature.thelemonlot.repository.UserRepository;
 
@@ -40,6 +42,55 @@ public class UserService implements UserDetailsService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    public User createUser(User user) {
+        if (existsByUsername(user.getUsername())) {
+            throw new RuntimeException("User already exists with the provided username.");
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password
+        user.setRole("USER"); // Set default role if needed
+
+        return userRepository.save(user); // Save the user
+    }
+
+    @Transactional
+    public User updateUser(int id, UpdateUserRequest updateRequest) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Verify old password if provided
+        if (updateRequest.getOldPassword() != null
+                && !passwordEncoder.matches(updateRequest.getOldPassword(), existingUser.getPassword())) {
+            throw new RuntimeException("Old password is incorrect");
+        }
+
+        // Update user details if present
+        if (updateRequest.getNewPassword() != null && !updateRequest.getNewPassword().trim().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(updateRequest.getNewPassword()));
+        }
+        if (updateRequest.getUsername() != null) {
+            if (existsByUsername(updateRequest.getUsername())) {
+                throw new RuntimeException("Username already in use");
+            }
+            existingUser.setUsername(updateRequest.getUsername());
+        }
+        if (updateRequest.getEmail() != null) {
+            existingUser.setEmail(updateRequest.getEmail());
+        }
+        if (updateRequest.getFirstName() != null) {
+            existingUser.setFirstName(updateRequest.getFirstName());
+        }
+        if (updateRequest.getLastName() != null) {
+            existingUser.setLastName(updateRequest.getLastName());
+        }
+        if (updateRequest.getPhoneNumber() != null) {
+            existingUser.setPhoneNumber(updateRequest.getPhoneNumber());
+        }
+
+        // Save and return the updated user
+        return userRepository.save(existingUser);
     }
 
     public Optional<User> getUserById(int id) {

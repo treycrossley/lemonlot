@@ -44,6 +44,26 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String generateToken(User user) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + validityInMilliseconds);
+
+        Key signingKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+
+        return Jwts.builder()
+                .setSubject(String.valueOf(user.getId())) // Use user ID as the subject
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .claim("username", user.getUsername())
+                .claim("role", user.getRole())
+                .claim("firstName", user.getFirstName())
+                .claim("lastName", user.getLastName())
+                .claim("email", user.getEmail())
+                .claim("phoneNumber", user.getPhoneNumber())
+                .signWith(signingKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public Claims decodeJWT(String token) {
         try {
             return Jwts.parserBuilder()

@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.thelemonlot.dto.LoginRequest;
+import com.revature.thelemonlot.dto.UpdateUserRequest;
 import com.revature.thelemonlot.model.User;
 import com.revature.thelemonlot.service.UserService;
 import com.revature.thelemonlot.util.JwtUtil;
@@ -51,6 +53,33 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> updateUser(
+            @PathVariable int id,
+            @Valid @RequestBody UpdateUserRequest updateRequest) {
+        try {
+            // Call the service method to update the user
+            User updatedUser = userService.updateUser(id, updateRequest);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            // Handle known exceptions with appropriate status
+            if (e.getMessage().contains("User not found")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("message", e.getMessage()));
+            } else if (e.getMessage().contains("Old password is incorrect")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", e.getMessage()));
+            } else if (e.getMessage().contains("Username already in use")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("message", e.getMessage()));
+            } else {
+                // Handle unexpected exceptions
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("message", "An error occurred while updating the user: " + e.getMessage()));
+            }
+        }
+    }
+
     @PostMapping("/register")
     public ResponseEntity<Object> registerUser(@Valid @RequestBody User user) {
         try {
@@ -58,7 +87,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body("User already exists: " + user.getUsername());
             }
-            User savedUser = userService.save(user);
+            User savedUser = userService.createUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
         } catch (Exception e) {
             // Handle any other exceptions
@@ -84,7 +113,7 @@ public class UserController {
                         .body(Map.of("message", "Invalid username or password"));
             }
 
-            String token = jwtUtil.generateToken(existingUser.getUsername(), existingUser.getRole());
+            String token = jwtUtil.generateToken(existingUser);
             Map<String, Object> response = new HashMap<>();
             response.put("accessToken", "Bearer " + token);
             response.put("tokenType", "Bearer");

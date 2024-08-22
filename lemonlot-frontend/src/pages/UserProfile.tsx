@@ -12,14 +12,14 @@ interface DecodedToken extends JwtPayload {
 const Profile: React.FC = () => {
   const [tokenData, setTokenData] = useState<DecodedToken | null>(null);
   const [error, setError] = useState<string>("");
-  const [accesToken] = useLocalStorage("auth_token", "");
+  const [accessToken] = useLocalStorage("auth_token", "");
 
   useEffect(() => {
     // Adjust if you store the token differently
-    if (accesToken) {
+    if (accessToken) {
       try {
         // Remove the "Bearer " prefix if it exists
-        const token = JSON.parse(accesToken).accessToken;
+        const token = JSON.parse(accessToken).accessToken;
         const cleanToken = token.startsWith("Bearer ") ? token.slice(7) : token;
 
         const decodedToken: DecodedToken = jwtDecode(cleanToken);
@@ -29,7 +29,7 @@ const Profile: React.FC = () => {
         console.error("Failed to decode token:", error);
       }
     }
-  }, []);
+  }, [accessToken]);
 
   if (error) {
     return <div>{error}</div>;
