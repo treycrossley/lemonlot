@@ -82,15 +82,14 @@ class UserControllerTest {
                 // Arrange
                 String userJson = objectMapper.writeValueAsString(user);
 
-                Mockito.when(userService.existsByUsername(user.getUsername())).thenReturn(false);
-                Mockito.when(userService.save(user)).thenReturn(user);
+                when(userService.existsByUsername(user.getUsername())).thenReturn(false);
+                when(userService.createUser(user)).thenReturn(user);
 
-                ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/users/register")
+                // Act
+                mockMvc.perform(MockMvcRequestBuilders.post("/api/users/register")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(userJson));
-
-                // Assert
-                resultActions.andExpect(status().isCreated())
+                                .content(userJson))
+                                .andExpect(status().isCreated())
                                 .andExpect(content().json(userJson));
         }
 
@@ -140,7 +139,7 @@ class UserControllerTest {
                 when(passwordEncoder.matches(rawPassword, user.getPassword())).thenReturn(true);
 
                 // Mock the JWT utility to return a sample token
-                when(jwtUtil.generateToken("john.doe", "USER")).thenReturn(token);
+                when(jwtUtil.generateToken(user)).thenReturn(token);
 
                 ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/users/login")
                                 .contentType(MediaType.APPLICATION_JSON)
