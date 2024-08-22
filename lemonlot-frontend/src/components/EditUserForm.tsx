@@ -22,7 +22,7 @@ const formSchema = z
       message:
         "Must be a valid international phone number (e.g., +1234567890 or 987654321).",
     }),
-    oldPassword: z.string().min(8, "Old password is required"),
+    oldPassword: z.string().min(8, "Old password is required").optional(),
     newPassword: z.string().min(8).optional().or(z.literal("")),
     confirmPassword: z.string().min(8).optional().or(z.literal("")),
   })
@@ -63,6 +63,8 @@ export default function EditUserForm({ user_id }: EditUserFormProps) {
   });
 
   const watchedValues = useWatch({ control: form.control });
+  // Determine if the user is editing their own profile
+  const isEditingOwnProfile = !user_id || user_id === getSub(token);
 
   useEffect(() => {
     if (token) {
@@ -128,7 +130,7 @@ export default function EditUserForm({ user_id }: EditUserFormProps) {
       const API_URL = import.meta.env.VITE_API_URL;
       const requestBody = {
         ...updatedValues,
-        oldPassword: values.oldPassword, // Always include oldPassword
+        ...(isEditingOwnProfile ? { oldPassword: values.oldPassword } : {}), // Include oldPassword only if editing own profile
       };
 
       if (!values.newPassword || values.newPassword.trim() === "") {
@@ -230,29 +232,33 @@ export default function EditUserForm({ user_id }: EditUserFormProps) {
           type="tel"
         />
 
-        <FormFieldItem
-          control={form.control}
-          name="oldPassword"
-          label="Old Password"
-          placeholder="Current password"
-          type="password"
-        />
+        {isEditingOwnProfile && (
+          <>
+            <FormFieldItem
+              control={form.control}
+              name="oldPassword"
+              label="Old Password"
+              placeholder="Current password"
+              type="password"
+            />
 
-        <FormFieldItem
-          control={form.control}
-          name="newPassword"
-          label="New Password"
-          placeholder="New password"
-          type="password"
-        />
+            <FormFieldItem
+              control={form.control}
+              name="newPassword"
+              label="New Password"
+              placeholder="New password"
+              type="password"
+            />
 
-        <FormFieldItem
-          control={form.control}
-          name="confirmPassword"
-          label="Confirm New Password"
-          placeholder="Confirm new password"
-          type="password"
-        />
+            <FormFieldItem
+              control={form.control}
+              name="confirmPassword"
+              label="Confirm New Password"
+              placeholder="Confirm new password"
+              type="password"
+            />
+          </>
+        )}
 
         <Button type="submit" disabled={!hasChanges || isLoading}>
           {isLoading ? (
