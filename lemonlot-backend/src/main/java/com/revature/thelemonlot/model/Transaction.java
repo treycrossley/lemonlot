@@ -1,6 +1,7 @@
 package com.revature.thelemonlot.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -24,16 +25,16 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id", updatable = false)
-    private int transaction_id;
+    private int transactionId;
 
     @Column(name = "user_id", nullable = false)
-    private int user_id;
+    private int userId;
 
     @Column(name = "salesperson_id")
-    private int salesperson_id;
+    private int salespersonId;
 
     @Column(name = "car_id", nullable = false)
-    private int car_id;
+    private int carId;
 
     @Column(name = "transaction_date", nullable = false)
     private LocalDate date;
@@ -48,17 +49,17 @@ public class Transaction {
     private String payment_method;
 
     @Column(name = "offer_amount")
-    private float offer_amount;
+    private float offerAmount;
 
     @Column(name = "comments", nullable = false)
     private String comments;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
 }
