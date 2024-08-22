@@ -11,6 +11,15 @@ import { LoadingSpinner } from "./ui/LoadingSpinner";
 import { getSub } from "@/lib/authUtil"; // Adjust import path
 import { useLocalStorage } from "usehooks-ts";
 import axios from "axios";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"; // Adjust import path for shadcn
 
 const formSchema = z
   .object({
@@ -25,6 +34,7 @@ const formSchema = z
     oldPassword: z.string().min(8, "Old password is required").optional(),
     newPassword: z.string().min(8).optional().or(z.literal("")),
     confirmPassword: z.string().min(8).optional().or(z.literal("")),
+    role: z.enum(["USER", "SELLER", "ADMIN"]).optional(), // Add this line to the schema
   })
   .refine(
     (data) => !data.newPassword || data.newPassword === data.confirmPassword,
@@ -52,6 +62,7 @@ export default function EditUserForm({ user_id }: EditUserFormProps) {
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",
+    role: "USER", // Default role value
   });
   const [token, setToken] = useLocalStorage("auth_token", "");
   const { toast } = useToast();
@@ -107,11 +118,23 @@ export default function EditUserForm({ user_id }: EditUserFormProps) {
     for (const key in values) {
       if (Object.prototype.hasOwnProperty.call(initialValues, key)) {
         const typedKey = key as keyof UserFormValues;
-        if (
-          values[typedKey] !== initialValues[typedKey] &&
-          values[typedKey] !== ""
-        ) {
-          updatedValues[typedKey] = values[typedKey];
+
+        if (typedKey === "role") {
+          // Ensure role value is correctly typed and handle it separately
+          if (values[typedKey] !== initialValues[typedKey]) {
+            updatedValues[typedKey] = values[typedKey] as
+              | "USER"
+              | "SELLER"
+              | "ADMIN";
+          }
+        } else {
+          // Handle other fields
+          if (
+            values[typedKey] !== initialValues[typedKey] &&
+            values[typedKey] !== ""
+          ) {
+            updatedValues[typedKey] = values[typedKey];
+          }
         }
       }
     }
@@ -137,7 +160,6 @@ export default function EditUserForm({ user_id }: EditUserFormProps) {
         delete requestBody.newPassword;
         delete requestBody.confirmPassword;
       }
-
       await axios.patch(
         `${API_URL}/users/${user_id || getSub(token)}`,
         requestBody
@@ -232,6 +254,27 @@ export default function EditUserForm({ user_id }: EditUserFormProps) {
           type="tel"
         />
 
+        {!isEditingOwnProfile && (
+          <Select
+            value={form.watch("role") as "USER" | "SELLER" | "ADMIN"} // Ensure the value matches the expected type
+            onValueChange={(value) =>
+              form.setValue("role", value as "USER" | "SELLER" | "ADMIN")
+            }
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select a role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Roles</SelectLabel>
+                <SelectItem value="USER">User</SelectItem>
+                <SelectItem value="SELLER">Seller</SelectItem>
+                <SelectItem value="ADMIN">Admin</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        )}
+
         {isEditingOwnProfile && (
           <>
             <FormFieldItem
@@ -261,11 +304,7 @@ export default function EditUserForm({ user_id }: EditUserFormProps) {
         )}
 
         <Button type="submit" disabled={!hasChanges || isLoading}>
-          {isLoading ? (
-            <LoadingSpinner className="w-5 h-5 text-blue-500" />
-          ) : (
-            "Update"
-          )}
+          {isLoading ? <LoadingSpinner /> : "Update"}
         </Button>
       </form>
     </Form>
