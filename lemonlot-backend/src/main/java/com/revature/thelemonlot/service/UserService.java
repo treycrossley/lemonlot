@@ -50,7 +50,9 @@ public class UserService implements UserDetailsService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password
-        user.setRole("USER"); // Set default role if needed
+        if (user.getRole() == null || user.getRole().trim().isEmpty()) {
+            user.setRole("USER"); // Default role
+        }
 
         return userRepository.save(user); // Save the user
     }
@@ -95,6 +97,15 @@ public class UserService implements UserDetailsService {
 
     public Optional<User> getUserById(int id) {
         return userRepository.findById(id);
+    }
+
+    @Transactional
+    public boolean deleteUser(int id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     @Override
