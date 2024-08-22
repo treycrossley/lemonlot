@@ -27,6 +27,9 @@ public class UpdateUserRequest {
     @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Phone number must be a valid international phone number")
     private String phoneNumber;
 
+    @Size(max = 50, message = "Role must be up to 50 characters long")
+    private String role; // Keep as String
+
     // Getters and Setters
     public String getOldPassword() {
         return oldPassword;
@@ -82,5 +85,13 @@ public class UpdateUserRequest {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getRole() {
+        return role; // Getter for role
+    }
+
+    public void setRole(String role) {
+        this.role = role; // Setter for role
     }
 }

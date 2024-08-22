@@ -2,6 +2,7 @@ package com.revature.thelemonlot.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,13 +32,24 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).isPresent();
     }
 
+    private void validateRole(String role) {
+        // Add your role validation logic here, for example:
+        Set<String> validRoles = Set.of("USER", "ADMIN", "SELLER"); // Example valid roles
+        if (!validRoles.contains(role)) {
+            throw new RuntimeException("Invalid role provided");
+        }
+    }
+
+    @Transactional
     public User save(User user) {
         if (existsByUsername(user.getUsername())) {
             throw new RuntimeException("User already exists with the provided username.");
         }
 
-        if (user.getRole() == null || user.getRole().isEmpty()) {
+        if (user.getRole() == null || user.getRole().trim().isEmpty()) {
             user.setRole("USER"); // Default role
+        } else {
+            validateRole(user.getRole()); // Validate the role
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -50,8 +62,11 @@ public class UserService implements UserDetailsService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password
+
         if (user.getRole() == null || user.getRole().trim().isEmpty()) {
             user.setRole("USER"); // Default role
+        } else {
+            validateRole(user.getRole());
         }
 
         return userRepository.save(user); // Save the user
@@ -62,13 +77,11 @@ public class UserService implements UserDetailsService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Verify old password if provided
         if (updateRequest.getOldPassword() != null
                 && !passwordEncoder.matches(updateRequest.getOldPassword(), existingUser.getPassword())) {
             throw new RuntimeException("Old password is incorrect");
         }
 
-        // Update user details if present
         if (updateRequest.getNewPassword() != null && !updateRequest.getNewPassword().trim().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(updateRequest.getNewPassword()));
         }
@@ -90,8 +103,11 @@ public class UserService implements UserDetailsService {
         if (updateRequest.getPhoneNumber() != null) {
             existingUser.setPhoneNumber(updateRequest.getPhoneNumber());
         }
+        if (updateRequest.getRole() != null && !updateRequest.getRole().trim().isEmpty()) {
+            validateRole(updateRequest.getRole()); // Validate the role
+            existingUser.setRole(updateRequest.getRole());
+        }
 
-        // Save and return the updated user
         return userRepository.save(existingUser);
     }
 
