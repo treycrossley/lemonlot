@@ -48,9 +48,6 @@ public class Transaction {
     @Column(name = "payment_method", nullable = false)
     private String payment_method;
 
-    @Column(name = "offer_amount")
-    private float offerAmount;
-
     @Column(name = "comments", nullable = false)
     private String comments;
 
