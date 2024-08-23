@@ -14,6 +14,7 @@ import TransactionsComponent from "./pages/Transaction";
 import InventoryManagement from "./pages/InventoryManagement";
 import CarCreationPage from "./pages/CarCreationPage";
 import EditCarPage from "./pages/EditCarPage";
+import MyTransactionsPage from "./pages/MyTransactionsPage";
 
 function App() {
   return (
@@ -32,9 +33,9 @@ function App() {
           <Route path="/search-cars" element={<CarSearchPage />} />
           <Route path="manage-inventory" element={<InventoryManagement />} />
           <Route path="/create-car" element={<CarCreationPage />} />
-          <Route path="/Transaction" element={<TransactionsComponent />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="/my-transactions" element={<MyTransactionsPage />} />
           <Route path="/transactions" element={<TransactionsComponent />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </>

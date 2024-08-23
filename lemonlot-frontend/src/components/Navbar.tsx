@@ -34,7 +34,7 @@ const navLinks = [
     href: "/manage-inventory",
     requiredRole: "SELLER",
   },
-  { name: "Transactions", href: "/transactions" },
+  { name: "Transactions", href: "/transactions", requiredRole: "ADMIN" },
 ];
 
 const Navbar: React.FC = () => {
@@ -115,6 +115,10 @@ const Navbar: React.FC = () => {
       navigate(`/edit-user/${userInfo?.sub}`);
     };
 
+    const handleViewTransactions = () => {
+      navigate("/my-transactions");
+    };
+
     return (
       <div className="flex flex-1 items-center justify-end space-x-2">
         {isLoggedIn ? (
@@ -132,6 +136,10 @@ const Navbar: React.FC = () => {
               <DropdownMenuItem onClick={handleEditProfile}>
                 <UserCog className="mr-2 h-4 w-4" />
                 <span>Edit Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleViewTransactions}>
+                <UserCog className="mr-2 h-4 w-4" />
+                <span>View my transactions</span>
               </DropdownMenuItem>
               {hasPermission(userInfo?.role ?? null, "ADMIN") && (
                 <DropdownMenuItem onClick={() => navigate("/admin-portal")}>
