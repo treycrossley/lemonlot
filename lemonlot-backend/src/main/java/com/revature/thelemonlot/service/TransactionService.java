@@ -48,7 +48,6 @@ public class TransactionService {
             existingTransaction.setAmount(transaction.getAmount());
             existingTransaction.setStatus(transaction.getStatus());
             existingTransaction.setPayment_method(transaction.getPayment_method());
-            existingTransaction.setOfferAmount(transaction.getOfferAmount());
             existingTransaction.setComments(transaction.getComments());
             existingTransaction.setUpdatedAt(transaction.getUpdatedAt());
 

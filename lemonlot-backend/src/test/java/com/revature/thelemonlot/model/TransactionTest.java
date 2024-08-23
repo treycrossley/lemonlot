@@ -20,7 +20,6 @@ public class TransactionTest {
         transaction.setAmount(15000.00f);
         transaction.setStatus("Completed");
         transaction.setPayment_method("Credit Card");
-        transaction.setOfferAmount(14000.00f);
         transaction.setComments("Customer is happy with the purchase.");
         transaction.setCreatedAt(LocalDateTime.now());
         transaction.setUpdatedAt(LocalDateTime.now());
@@ -37,7 +36,6 @@ public class TransactionTest {
         assertThat(transaction.getAmount()).isEqualTo(15000.00f);
         assertThat(transaction.getStatus()).isEqualTo("Completed");
         assertThat(transaction.getPayment_method()).isEqualTo("Credit Card");
-        assertThat(transaction.getOfferAmount()).isEqualTo(14000.00f);
         assertThat(transaction.getComments()).isEqualTo("Customer is happy with the purchase.");
         assertThat(transaction.getCreatedAt()).isNotNull();
         assertThat(transaction.getUpdatedAt()).isNotNull();
@@ -47,7 +45,7 @@ public class TransactionTest {
     public void testTransactionAllArgsConstructor() {
         // Given
         Transaction transaction = new Transaction(1, 123, 456, 789, LocalDate.now(),
-                15000.00f, "Completed", "Credit Card", 14000.00f,
+                15000.00f, "Completed", "Credit Card",
                 "Customer is happy with the purchase.", LocalDateTime.now(), LocalDateTime.now());
 
         // Then
@@ -59,7 +57,6 @@ public class TransactionTest {
         assertThat(transaction.getAmount()).isEqualTo(15000.00f);
         assertThat(transaction.getStatus()).isEqualTo("Completed");
         assertThat(transaction.getPayment_method()).isEqualTo("Credit Card");
-        assertThat(transaction.getOfferAmount()).isEqualTo(14000.00f);
         assertThat(transaction.getComments()).isEqualTo("Customer is happy with the purchase.");
         assertThat(transaction.getCreatedAt()).isNotNull();
         assertThat(transaction.getUpdatedAt()).isNotNull();
