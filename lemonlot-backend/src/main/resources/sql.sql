@@ -1,7 +1,10 @@
 set search_path to public;
-drop table if exists transactions;
-drop table if exists users;
-drop table if exists cars;
+--drop table if exists transactions;
+--drop table if exists users;
+--drop table if exists cars;
+truncate table transactions;
+truncate table users;
+truncate table cars;
 
 create or replace function update_timestamp() returns trigger
 language plpgsql
@@ -28,7 +31,7 @@ $$;
 --     updated_at timestamp default current_timestamp
 -- );
 
--- create table inventory (
+-- create table cars (
 --     car_id serial primary key,
 --     make varchar(50) not null,
 --     model varchar(50) not null,
@@ -72,11 +75,11 @@ $$;
 --create trigger update_timestamp before update on cars for each row execute procedure update_timestamp();
 --create trigger update_timestamp before update on users for each row execute procedure update_timestamp();
 
-insert into cars (make, model, year, price, color, mileage, status, inventory_count, description, image_url) values
-    ('Toyota', 'Corolla', 2020, 20000.00, 'Blue', 15000.00, 'Available', 10, 'A reliable and fuel-efficient compact car.', 'http://example.com/images/toyota_corolla_2020.jpg'),
-    ('Honda', 'Civic', 2019, 22000.00, 'Red', 12000.00, 'Available', 5, 'A sporty and spacious sedan with advanced features.', 'http://example.com/images/honda_civic_2019.jpg'),
-    ('Ford', 'Mustang', 2021, 35000.00, 'Black', 5000.00, 'Sold', 0, 'A high-performance sports car with iconic design.', 'http://example.com/images/ford_mustang_2021.jpg'),
-    ('Chevrolet', 'Equinox', 2018, 18000.00, 'Silver', 30000.00, 'Reserved', 2, 'A versatile SUV with plenty of cargo space.', 'http://example.com/images/chevrolet_equinox_2018.jpg'),
-    ('Nissan', 'Altima', 2022, 25000.00, 'White', 8000.00, 'Available', 8, 'A modern sedan with advanced safety features.', 'http://example.com/images/nissan_altima_2022.jpg');
+insert into cars (make, model, year, price, color, mileage, status, inventory_count, description, image_url, created_at) values
+    ('Toyota', 'Corolla', 2020, 20000.00, 'Blue', 15000.00, 'Available', 10, 'A reliable and fuel-efficient compact car.', 'http://example.com/images/toyota_corolla_2020.jpg', current_timestamp),
+    ('Honda', 'Civic', 2019, 22000.00, 'Red', 12000.00, 'Available', 5, 'A sporty and spacious sedan with advanced features.', 'http://example.com/images/honda_civic_2019.jpg', current_timestamp),
+    ('Ford', 'Mustang', 2021, 35000.00, 'Black', 5000.00, 'Sold', 0, 'A high-performance sports car with iconic design.', 'http://example.com/images/ford_mustang_2021.jpg', current_timestamp),
+    ('Chevrolet', 'Equinox', 2018, 18000.00, 'Silver', 30000.00, 'Reserved', 2, 'A versatile SUV with plenty of cargo space.', 'http://example.com/images/chevrolet_equinox_2018.jpg', current_timestamp),
+    ('Nissan', 'Altima', 2022, 25000.00, 'White', 8000.00, 'Available', 8, 'A modern sedan with advanced safety features.', 'http://example.com/images/nissan_altima_2022.jpg', current_timestamp);
 
 select * from cars;
