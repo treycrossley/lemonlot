@@ -10,6 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,7 +34,7 @@ public class Car {
     @Column(name = "model", nullable = false)
     private String model;
 
-    @Column(name = "year", nullable = false)
+    @Column(name = "model_year", nullable = false)
     private int modelYear;
 
     @Column(name = "price", nullable = false)
@@ -44,17 +46,12 @@ public class Car {
     @Column(name = "mileage")
     private float mileage;
 
-    @Column(name = "status", nullable = false)
-    private String status;
-
-    @Column(name = "inventory_count", nullable = false)
-    private int inventoryCount;
-
     @Column(name = "description")
     private String description;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false) // Foreign key column
+    private User seller;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)

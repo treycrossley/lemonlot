@@ -1,6 +1,6 @@
 package com.revature.thelemonlot.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
@@ -23,8 +23,8 @@ public class UserTest {
         user.setPreferences("None");
 
         // Manually set createdAt and updatedAt for testing
-        user.setCreatedAt(LocalDate.now());
-        user.setUpdatedAt(LocalDate.now());
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
 
         // When
         // Getters are called implicitly through assertions
@@ -49,7 +49,7 @@ public class UserTest {
         // Given
         User user = new User(1, "johndoe", "password123", "johndoe@example.com",
                 "Customer", "John", "Doe", "1234567890",
-                "123 Main St, Anytown, USA", "None", LocalDate.now(), LocalDate.now());
+                "123 Main St, Anytown, USA", "None", LocalDateTime.now(), LocalDateTime.now());
         // Then
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getUsername()).isEqualTo("johndoe");
