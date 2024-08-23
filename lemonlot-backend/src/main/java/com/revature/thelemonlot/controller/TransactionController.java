@@ -1,6 +1,7 @@
 package com.revature.thelemonlot.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    public Transaction createCompany(@RequestBody Transaction transaction) {
+    public Transaction createTransaction(@RequestBody Transaction transaction) {
         return transactionService.createTransaction(transaction);
     }
 
@@ -37,6 +38,23 @@ public class TransactionController {
     {
         transactionService.updateTransaction(transaction, id);
         return ResponseEntity.status(200).body(1);
+    }
+
+    @PatchMapping("/{id}")
+    public @ResponseBody ResponseEntity<Transaction> updateTransactionStatus(
+            @PathVariable int id,
+            @RequestBody Map<String, Object> updates) {
+        // Extract status from the request body
+        String status = (String) updates.get("status");
+
+        // Ensure status is not null
+        if (status == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // Update the transaction status
+        Transaction updatedTransaction = transactionService.updateTransactionStatus(id, status);
+        return ResponseEntity.status(200).body(updatedTransaction);
     }
 
     @DeleteMapping("/{id}")

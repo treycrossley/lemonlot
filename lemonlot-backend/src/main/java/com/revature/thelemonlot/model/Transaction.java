@@ -62,4 +62,8 @@ public class Transaction {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 }
