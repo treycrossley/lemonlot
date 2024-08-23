@@ -27,7 +27,7 @@ function App() {
           <Route path="/admin-portal" element={<AdminPortal />} />
           <Route path="/search-cars" element={<CarSearchPage />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="/Transaction" element = {<TransactionsComponent/>}/>
+          <Route path="/transactions" element={<TransactionsComponent />} />
         </Routes>
       </div>
     </>

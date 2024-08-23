@@ -5,8 +5,8 @@ import {
   SheetContent,
   SheetTrigger,
   SheetHeader,
-  SheetDescription,
   SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet";
 import {
   NavigationMenu,
@@ -30,6 +30,7 @@ import {
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "Search", href: "search-cars" },
+  { name: "Transactions", href: "/transactions" },
   { name: "About", href: "#" },
   { name: "Contact", href: "#" },
 ];
