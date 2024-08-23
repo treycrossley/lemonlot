@@ -1,31 +1,38 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { User, columns } from "./columns"; // Adjust the path as needed
 import { DataTable } from "@/components/ui/data-table"; // Adjust the path as needed
-import UserActions from "./UserActions";
+import { Car, columns } from "./columns";
+import { useLocalStorage } from "usehooks-ts";
+import { getSub } from "@/lib/authUtil";
+import CarActions from "./CarActions"; // Adjust the import path as needed
 import { Row } from "@tanstack/react-table"; // Import the Row type
 
-const fetchUsers = async (): Promise<User[]> => {
+const fetchMyCars = async (currentUserId: number): Promise<Car[]> => {
   try {
     const API_URL = import.meta.env.VITE_API_URL;
-    const response = await axios.get(`${API_URL}/users`); // Ensure the URL matches your backend endpoint
-    return response.data;
+    const response = await axios.get(`${API_URL}/cars`);
+
+    // Filter cars by currentUserId
+    const filteredCars = response.data.filter(
+      (car: Car) => car.seller.id === currentUserId
+    );
+
+    return filteredCars;
   } catch (error) {
     console.error(error);
-    return []; // Return an empty array in case of an error
+    return [];
   }
 };
 
-export default function UserTable() {
-  const [data, setData] = useState<User[]>([]);
+export default function CarTable() {
+  const [data, setData] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [token] = useLocalStorage("auth_token", "");
 
   // Define the handleDelete function
-  const handleDelete = (deletedUser: User) => {
-    setData((prevData) =>
-      prevData.filter((user) => user.id !== deletedUser.id)
-    );
+  const handleDelete = (deletedCar: Car) => {
+    setData((prevData) => prevData.filter((car) => car.id !== deletedCar.id));
   };
 
   // Add the handleDelete function to the columns
@@ -33,8 +40,8 @@ export default function UserTable() {
     if (col.id === "actions") {
       return {
         ...col,
-        cell: ({ row }: { row: Row<User> }) => (
-          <UserActions user={row.original} onDelete={handleDelete} />
+        cell: ({ row }: { row: Row<Car> }) => (
+          <CarActions car={row.original} onDelete={handleDelete} />
         ),
       };
     }
@@ -44,8 +51,10 @@ export default function UserTable() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const users = await fetchUsers();
-        setData(users);
+        const userIdString = getSub(token);
+        const userId = userIdString ? parseInt(userIdString, 10) : 0;
+        const cars = await fetchMyCars(userId);
+        setData(cars);
       } catch (error) {
         setError((error as Error).message);
       } finally {
@@ -54,7 +63,7 @@ export default function UserTable() {
     };
 
     loadData();
-  }, []);
+  }, [token]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;

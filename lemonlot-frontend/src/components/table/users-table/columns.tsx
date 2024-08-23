@@ -41,12 +41,13 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const user = row.original;
 
-      const handleDelete = (user: User) => {
-        // Implement your delete functionality here
-        console.log("Delete user:", user);
-      };
-
-      return <UserActions user={user} onDelete={handleDelete} />;
+      // Pass the user and the onDelete function to UserActions
+      return (
+        <UserActions
+          user={user}
+          onDelete={(userToDelete) => console.log("Delete user:", userToDelete)}
+        />
+      );
     },
   },
 ];

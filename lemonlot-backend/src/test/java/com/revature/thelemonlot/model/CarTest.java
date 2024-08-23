@@ -18,10 +18,7 @@ public class CarTest {
         car.setPrice(24000.00f);
         car.setColor("Blue");
         car.setMileage(15000.0f);
-        car.setStatus("Available");
-        car.setInventoryCount(5);
         car.setDescription("A reliable sedan.");
-        car.setImageUrl("http://example.com/car.jpg");
         car.setCreatedAt(LocalDate.now());
         car.setUpdatedAt(LocalDate.now());
 
@@ -36,10 +33,7 @@ public class CarTest {
         assertThat(car.getPrice()).isEqualTo(24000.00f);
         assertThat(car.getColor()).isEqualTo("Blue");
         assertThat(car.getMileage()).isEqualTo(15000.0f);
-        assertThat(car.getStatus()).isEqualTo("Available");
-        assertThat(car.getInventoryCount()).isEqualTo(5);
         assertThat(car.getDescription()).isEqualTo("A reliable sedan.");
-        assertThat(car.getImageUrl()).isEqualTo("http://example.com/car.jpg");
         assertThat(car.getCreatedAt()).isNotNull();
         assertThat(car.getUpdatedAt()).isNotNull();
     }
@@ -47,9 +41,9 @@ public class CarTest {
     @Test
     public void testCarAllArgsConstructor() {
         // Given
-        Car car = new Car(1, "Toyota", "Camry", 2021, 24000.00f, "Blue",
-                15000.0f, "Available", 5, "A reliable sedan.",
-                "http://example.com/car.jpg", LocalDate.now(), LocalDate.now());
+        Car car = new Car(1, "Toyota", "Camry", 2021, 24000.00f, "Blue", 15000.0f, "A reliable sedan.", null,
+                LocalDate.now(),
+                LocalDate.now());
 
         // Then
         assertThat(car.getId()).isEqualTo(1);
@@ -59,10 +53,7 @@ public class CarTest {
         assertThat(car.getPrice()).isEqualTo(24000.00f);
         assertThat(car.getColor()).isEqualTo("Blue");
         assertThat(car.getMileage()).isEqualTo(15000.0f);
-        assertThat(car.getStatus()).isEqualTo("Available");
-        assertThat(car.getInventoryCount()).isEqualTo(5);
         assertThat(car.getDescription()).isEqualTo("A reliable sedan.");
-        assertThat(car.getImageUrl()).isEqualTo("http://example.com/car.jpg");
         assertThat(car.getCreatedAt()).isNotNull();
         assertThat(car.getUpdatedAt()).isNotNull();
     }
