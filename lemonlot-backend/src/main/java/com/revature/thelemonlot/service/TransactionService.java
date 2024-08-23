@@ -36,4 +36,28 @@ public class TransactionService {
     public Transaction createTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
     }
+
+    public void updateTransaction(Transaction transaction, int id)
+    {
+        Optional<Transaction> optionalTransaction = transactionRepository.findById(id);
+        if(optionalTransaction.isPresent())
+        {
+            Transaction temp = optionalTransaction.get();
+            temp = transaction;
+            transactionRepository.save(temp);
+        }
+    }
+
+    public Integer deleteTransactionByID(int id)
+    {
+        Optional<Transaction> optionalTransaction = transactionRepository.findById(id);
+        if(optionalTransaction.isPresent())
+        {
+            transactionRepository.delete(optionalTransaction.get());
+            return 1;
+        }
+        return null;
+    }
+    
 }
+

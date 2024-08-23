@@ -31,4 +31,17 @@ public class TransactionController {
     public @ResponseBody ResponseEntity<Transaction> findTransactionById(@PathVariable int id) {
         return ResponseEntity.status(200).body(transactionService.findTransactionById(id));
     }
+
+    @PutMapping("/update/{id}")
+    public @ResponseBody ResponseEntity<Integer> updateTransaction(@RequestBody Transaction transaction, @PathVariable int id)
+    {
+        transactionService.updateTransaction(transaction, id);
+        return ResponseEntity.status(200).body(1);
+    }
+
+    @DeleteMapping("/{id}")
+    public @ResponseBody ResponseEntity<Integer> deleteTransaction(@PathVariable int id)
+    {
+        return ResponseEntity.status(200).body(transactionService.deleteTransactionByID(id));
+    }
 }
